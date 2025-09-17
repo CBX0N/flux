@@ -14,7 +14,7 @@ spec:
     kind: GitRepository
     name: flux-sync
     namespace: flux-system
-  path: ./flux/infrastructure/cert-manager/controller
+  path: ./infrastructure/cert-manager/controller
   prune: true
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -35,5 +35,5 @@ spec:
     kind: GitRepository
     name: flux-sync
     namespace: flux-system
-  path: ./flux/infrastructure/cert-manager/certs
+  path: ./infrastructure/cert-manager/certs
   prune: true

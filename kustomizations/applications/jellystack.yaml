@@ -14,5 +14,5 @@ spec:
     kind: GitRepository
     name: flux-sync
     namespace: flux-system
-  path: ./flux/applications/jellystack
+  path: ./applications/jellystack
   prune: true
