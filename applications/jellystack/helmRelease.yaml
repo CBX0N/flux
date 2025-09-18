@@ -18,3 +18,109 @@ spec:
         name: cbxon-helm
         namespace: default
       interval: 30s
+  values:
+    sonarr:
+      ingress:
+        enabled: true
+        hosts:
+          - host: sonarr.cbxon.co.uk
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - secretName: sonarr-tls
+            hosts:
+              - sonarr.cbxon.co.uk
+      volumes:
+        - name: sonarr-config
+          persistentVolumeClaim:
+            claimName: sonarr-config
+      volumeMounts:
+        - name: sonarr-config
+          mountPath: /config
+    
+    radarr:
+      ingress:
+        enabled: true
+        hosts:
+          - host: radarr.cbxon.co.uk
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - secretName: radarr-tls
+            hosts:
+              - radarr.cbxon.co.uk
+      volumeMounts:
+        - name: radarr-config
+          mountPath: /config
+      volumes:
+        - name: radarr-config
+          persistentVolumeClaim:
+            claimName: radarr-config
+
+    prowlarr:
+      ingress:
+        enabled: true
+        hosts:
+          - host: prowlarr.cbxon.co.uk
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - secretName: prowlarr-tls
+            hosts:
+              - prowlarr.cbxon.co.uk
+
+    qbittorrent:
+      ingress:
+        enabled: true
+        hosts:
+          - host: qbittorrent.cbxon.co.uk
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - secretName: qbittorrent-tls
+            hosts:
+              - qbittorrent.cbxon.co.uk
+
+    jellyfin:
+      ingress:
+        enabled: true
+        hosts:
+          - host: jellyfin.cbxon.co.uk
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - secretName: jellyfin-tls
+            hosts:
+              - jellyfin.cbxon.co.uk
+      volumeMounts:
+        - name: jellyfin-config
+          mountPath: /config
+      volumes:
+        - name: jellyfin-config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+
+    jellyseerr:
+      ingress:
+        enabled: true
+        hosts:
+          - host: jellyseerr.cbxon.co.uk
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - secretName: jellyseerr-tls
+            hosts:
+              - jellyseerr.cbxon.co.uk
+      volumeMounts:
+        - name: jellyseerr-config
+          mountPath: /app/config
+      volumes:
+        - name: jellyseerr-config
+          persistentVolumeClaim:
+            claimName: jellyseerr-config
