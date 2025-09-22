@@ -5,5 +5,5 @@ metadata:
   name: sealed-secrets
   namespace: default
 spec:
-  interval: 1m
+  interval: 1h
   url: https://bitnami-labs.github.io/sealed-secrets

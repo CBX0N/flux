@@ -5,10 +5,10 @@ metadata:
   name: sealed-secrets
   namespace: default
 spec:
-  install:
-    createNamespace: true
-  targetNamespace: kube-system
-  interval: 10m
+  targetNamespace: flux-system
+  interval: 1h
+  release-name: sealed-secrets-controller
+  crds: CreateReplace
   chart:
     spec:
       chart: sealed-secrets
