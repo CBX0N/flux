@@ -19,7 +19,7 @@ spec:
         namespace: default
       interval: 30s
   valuesFrom:
-    - kind: secret
+    - kind: Secret
       name: jellystack-helmsecrets
       valuesKey: values.yaml
   values:
