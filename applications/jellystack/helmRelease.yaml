@@ -20,7 +20,7 @@ spec:
       interval: 30s
   valuesFrom:
     - kind: secret
-      name: HelmSecrets
+      name: jellystack-helmsecrets
       valuesKey: values.yaml
   values:
     services:
