@@ -18,109 +18,146 @@ spec:
         name: cbxon-helm
         namespace: default
       interval: 30s
+  valuesFrom:
+    - kind: secret
+      name: HelmSecrets
+      valuesKey: values.yaml
   values:
-    sonarr:
-      ingress:
-        enabled: true
-        hosts:
-          - host: sonarr.cbxon.co.uk
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - secretName: sonarr-tls
-            hosts:
-              - sonarr.cbxon.co.uk
-      volumes:
-        - name: sonarr-config
-          persistentVolumeClaim:
-            claimName: sonarr-config
-      volumeMounts:
-        - name: sonarr-config
-          mountPath: /config
-    
-    radarr:
-      ingress:
-        enabled: true
-        hosts:
-          - host: radarr.cbxon.co.uk
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - secretName: radarr-tls
-            hosts:
-              - radarr.cbxon.co.uk
-      volumeMounts:
-        - name: radarr-config
-          mountPath: /config
-      volumes:
-        - name: radarr-config
-          persistentVolumeClaim:
-            claimName: radarr-config
+    services:
+      prowlarr:
+        ingress:
+          enabled: true
+          host: prowlarr.cbxon.co.uk
+        volumeMounts:
+          - name: prowlarr-config
+            mountPath: /config
+          - name: downloads
+            mountPath: /downloads
+        volumes:
+          - name: prowlarr-config
+            type: pvc
+            size: 500Mi
+          - name: wireguard
+            type: secret
+            secretName: wireguard-config
+          - name: dnsmasq-conf
+            type: configmap
+            configMapName: dnsmasq-conf
+          - name: downloads
+            type: csi
+            driver: smb.csi.k8s.io
+            source: '//u493236-sub1.your-storagebox.de/u493236-sub1/downloads'
+            secretName: smbcreds
+            mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock"
 
-    prowlarr:
-      ingress:
-        enabled: true
-        hosts:
-          - host: prowlarr.cbxon.co.uk
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - secretName: prowlarr-tls
-            hosts:
-              - prowlarr.cbxon.co.uk
+      qbittorrent:
+        ingress:
+          enabled: true
+          host: qbittorrent.cbxon.co.uk
+        volumeMounts:
+          - name: downloads
+            mountPath: /downloads
+          - name: port-config
+            mountPath: "/natpmp/"
+        volumes:
+          - name: port-config
+            type: pvc
+            size: 500Mi
+          - name: wireguard
+            type: secret
+            secretName: wireguard-config
+          - name: downloads
+            type: csi
+            driver: smb.csi.k8s.io
+            source: '//u493236-sub1.your-storagebox.de/u493236-sub1/downloads'
+            secretName: smbcreds
+            mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock"
 
-    qbittorrent:
-      ingress:
-        enabled: true
-        hosts:
-          - host: qbittorrent.cbxon.co.uk
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - secretName: qbittorrent-tls
-            hosts:
-              - qbittorrent.cbxon.co.uk
+      jellyfin:
+        ingress:
+          enabled: true
+          host: jellyfin.cbxon.co.uk
+        volumeMounts:
+          - name: jellyfin-config
+            mountPath: /config
+          - name: tv
+            mountPath: /tv
+          - name: movies
+            mountPath: /movies
+        volumes:
+          - name: jellyfin-config
+            type: pvc
+            size: 500Mi
+          - name: movies
+            type: csi
+            driver: smb.csi.k8s.io
+            source: '//u493236-sub1.your-storagebox.de/u493236-sub1/movies'
+            secretName: smbcreds
+            mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock"
+          - name: tv
+            type: csi
+            driver: smb.csi.k8s.io
+            source: '//u493236-sub1.your-storagebox.de/u493236-sub1/tv'
+            secretName: smbcreds
+            mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock"
 
-    jellyfin:
-      ingress:
-        enabled: true
-        hosts:
-          - host: jellyfin.cbxon.co.uk
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - secretName: jellyfin-tls
-            hosts:
-              - jellyfin.cbxon.co.uk
-      volumeMounts:
-        - name: jellyfin-config
-          mountPath: /config
-      volumes:
-        - name: jellyfin-config
-          persistentVolumeClaim:
-            claimName: jellyfin-config
-
-    jellyseerr:
-      ingress:
-        enabled: true
-        hosts:
-          - host: jellyseerr.cbxon.co.uk
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - secretName: jellyseerr-tls
-            hosts:
-              - jellyseerr.cbxon.co.uk
-      volumeMounts:
-        - name: jellyseerr-config
-          mountPath: /app/config
-      volumes:
-        - name: jellyseerr-config
-          persistentVolumeClaim:
-            claimName: jellyseerr-config
+      jellyseerr:
+        ingress:
+          enabled: true
+          host: jellyseerr.cbxon.co.uk
+          
+      radarr:
+        ingress:
+          enabled: true
+          host: radarr.cbxon.co.uk
+        volumeMounts:
+          - name: radarr-config
+            mountPath: /config
+          - name: downloads
+            mountPath: /downloads
+          - name: movies
+            mountPath: /movies
+        volumes:
+          - name: radarr-config
+            type: pvc
+            size: 500Mi
+          - name: downloads
+            type: csi
+            driver: smb.csi.k8s.io
+            source: '//u493236-sub1.your-storagebox.de/u493236-sub1/downloads'
+            secretName: smbcreds
+            mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock"
+          - name: movies
+            type: csi
+            driver: smb.csi.k8s.io
+            source: '//u493236-sub1.your-storagebox.de/u493236-sub1/movies'
+            secretName: smbcreds
+            mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock"  
+          
+      sonarr:
+        ingress:
+          enabled: true
+          host: sonarr.cbxon.co.uk
+        volumeMounts:
+          - name: sonarr-config
+            mountPath: /config
+          - name: downloads
+            mountPath: /downloads
+          - name: tv
+            mountPath: /tv
+        volumes:
+          - name: sonarr-config
+            type: pvc
+            size: 500Mi
+          - name: downloads
+            type: csi
+            driver: smb.csi.k8s.io
+            source: '//u493236-sub1.your-storagebox.de/u493236-sub1/downloads'
+            secretName: smbcreds
+            mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock"
+          - name: tv
+            type: csi
+            driver: smb.csi.k8s.io
+            source: '//u493236-sub1.your-storagebox.de/u493236-sub1/tv'
+            secretName: smbcreds
+            mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock"
