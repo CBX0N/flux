@@ -8,7 +8,8 @@ spec:
   targetNamespace: flux-system
   interval: 1h
   release-name: sealed-secrets-controller
-  crds: CreateReplace
+  install:
+    crds: CreateReplace
   chart:
     spec:
       chart: sealed-secrets
