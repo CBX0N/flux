@@ -8,6 +8,7 @@ spec:
   install:
     createNamespace: true
   targetNamespace: jellystack
+  version: 1.0.1
   releaseName: jellystack
   interval: 30s
   chart:
