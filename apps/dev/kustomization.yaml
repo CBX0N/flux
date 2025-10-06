@@ -3,4 +3,5 @@ kind: Kustomization
 metadata:
   name: apps
 resources:
-  - ./apps/base/jellystack
+  - jellystack-sealedsecret.yaml
+  - ../base/jellystack
