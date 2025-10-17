@@ -1,0 +1,98 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: jellystack
+  namespace: default
+spec:
+  targetNamespace: jellystack
+  releaseName: jellystack
+  interval: 30s
+  chart:
+    spec:
+      chart: jellystack
+      version: 1.0.1
+      sourceRef:
+        kind: HelmRepository
+        name: cbxon-helm
+        namespace: default
+      interval: 30s
+  valuesFrom:
+    - kind: Secret
+      name: jellystack-helmsecrets
+      valuesKey: values.yaml
+  values:
+    services:
+      prowlarr:
+        ingress:
+          enabled: true
+          host: prowlarr.cbxon.co.uk
+        volumeMounts:
+          - name: prowlarr-config
+            mountPath: /config
+        volumes:
+          - name: prowlarr-config
+            type: pvc
+            size: 500Mi
+          - name: wireguard
+            type: secret
+            secretName: wireguard-config
+          - name: dnsmasq-conf
+            type: configmap
+            configMapName: dnsmasq-conf
+
+      qbittorrent:
+        ingress:
+          enabled: true
+          host: qbittorrent.cbxon.co.uk
+        volumeMounts:
+          - name: port-config
+            mountPath: "/natpmp/"
+        volumes:
+          - name: port-config
+            type: pvc
+            size: 500Mi
+          - name: wireguard
+            type: secret
+            secretName: wireguard-config
+
+      jellyfin:
+        ingress:
+          enabled: true
+          host: jellyfin.cbxon.co.uk
+        volumeMounts:
+          - name: jellyfin-config
+            mountPath: /config
+        volumes:
+          - name: jellyfin-config
+            type: pvc
+            size: 500Mi
+
+      jellyseerr:
+        ingress:
+          enabled: true
+          host: jellyseerr.cbxon.co.uk
+          
+      radarr:
+        ingress:
+          enabled: true
+          host: radarr.cbxon.co.uk
+        volumeMounts:
+          - name: radarr-config
+            mountPath: /config
+        volumes:
+          - name: radarr-config
+            type: pvc
+            size: 500Mi
+          
+      sonarr:
+        ingress:
+          enabled: true
+          host: sonarr.cbxon.co.uk
+        volumeMounts:
+          - name: sonarr-config
+            mountPath: /config
+        volumes:
+          - name: sonarr-config
+            type: pvc
+            size: 500Mi
