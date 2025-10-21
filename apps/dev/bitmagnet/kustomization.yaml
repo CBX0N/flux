@@ -5,3 +5,5 @@ metadata:
 resources:
   - ns.yaml
   - pod.yaml
+  - svc.yaml
+  - ingress.yaml
