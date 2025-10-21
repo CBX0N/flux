@@ -26,7 +26,7 @@ spec:
         volumes:
           - name: jellyfin-config
             type: pvc
-            size: 500Mi
+            size: 4Gi
           - name: movies
             type: csi
             driver: smb.csi.k8s.io
