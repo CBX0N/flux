@@ -13,7 +13,13 @@ spec:
       - name: POSTGRES_HOST
         value: postgres
       - name: POSTGRES_PASSWORD
-        value: postgres   
+        value: postgres
+    command:
+      - worker
+      - run
+      - --keys=http_server
+      - --keys=queue_server
+      - --keys=dht_crawler
     ports:
     - containerPort: 3333
     - containerPort: 3334
