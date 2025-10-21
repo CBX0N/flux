@@ -3,6 +3,4 @@ kind: Kustomization
 metadata:
   name: apps
 resources:
-  - jellystack
-  - n8n
-  - authentik
+  - bitmagnet

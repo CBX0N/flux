@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: bitmagnet
+  name: bitmagnet
+  namespace: bitmagnet
+spec:
+  containers:
+  - image: ghcr.io/bitmagnet-io/bitmagnet:latest
+    name: bitmagnet
+    env:
+      - name: POSTGRES_HOST
+        value: postgres
+      - name: POSTGRES_PASSWORD
+        value: postgres   
+    ports:
+    - containerPort: 3333
+    - containerPort: 3334
+    - containerPort: 3334
+      protocol: UDP
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
