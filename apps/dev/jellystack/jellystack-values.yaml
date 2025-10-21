@@ -1,0 +1,32 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: jellystack
+  namespace: default
+spec:
+  values:
+    services:
+      prowlarr:
+        ingress:
+          host: prowlarr.dev.cbxon.co.uk
+
+      qbittorrent:
+        ingress:
+          host: qbittorrent.dev.cbxon.co.uk
+
+      jellyfin:
+        ingress:
+          host: jellyfin.dev.cbxon.co.uk
+
+      jellyseerr:
+        ingress:
+          host: jellyseerr.dev.cbxon.co.uk
+          
+      radarr:
+        ingress:
+          host: radarr.dev.cbxon.co.uk
+          
+      sonarr:
+        ingress:
+          host: sonarr.dev.cbxon.co.uk
