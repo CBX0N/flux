@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: bitmagnet
+  name: bitmagnet
+  namespace: bitmagnet
+spec:
+  ports:
+  - name: port-1
+    port: 3333
+    protocol: TCP
+    targetPort: 3333
+  - name: port-2-tcp
+    port: 3334
+    protocol: TCP
+    targetPort: 3334
+  - name: port-2-udp
+    port: 3334
+    protocol: UDP
+    targetPort: 3334
+  selector:
+    run: bitmagnet
+status:
+  loadBalancer: {}

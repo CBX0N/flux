@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-bitmagnet
+  namespace: bitmagnet
+  annotations:
+    cert-manager.io/cluster-issuer: "cert-cluster-issuer"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  labels:
+    run: bitmagnet
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - bitmagnet.cbxon.co.uk
+    secretName: certificate-bitmagnet
+  rules:
+  - host: bitmagnet.dev.cbxon.co.uk
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: bitmagnet
+            port:
+              number: 3333
+

@@ -14,9 +14,12 @@ spec:
         value: postgres
       - name: POSTGRES_PASSWORD
         value: postgres
-    command:
+    args:
       - worker
-    args: ["run","--keys=http_server","--keys=queue_server","--keys=dht_crawler"]
+      - run
+      - --keys=http_server
+      - --keys=queue_server
+      - --keys=dht_crawler
     ports:
     - containerPort: 3333
     - containerPort: 3334
