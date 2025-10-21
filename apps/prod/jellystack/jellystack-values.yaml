@@ -8,52 +8,10 @@ spec:
   values:
     services:
       prowlarr:
-        ingress:
-          enabled: true
-          host: prowlarr.cbxon.co.uk
-        volumeMounts:
-          - name: prowlarr-config
-            mountPath: /config
-          - name: downloads
-            mountPath: /downloads
-        volumes:
-          - name: prowlarr-config
-            type: pvc
-            size: 500Mi
-          - name: wireguard
-            type: secret
-            secretName: wireguard-config
-          - name: dnsmasq-conf
-            type: configmap
-            configMapName: dnsmasq-conf
-          - name: downloads
-            type: csi
-            driver: smb.csi.k8s.io
-            source: '//u493236-sub1.your-storagebox.de/u493236-sub1/downloads'
-            secretName: smbcreds
-            mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock"
+        enabled: false
 
       qbittorrent:
-        ingress:
-          host: qbittorrent.cbxon.co.uk
-        volumeMounts:
-          - name: downloads
-            mountPath: /downloads
-          - name: port-config
-            mountPath: "/natpmp/"
-        volumes:
-          - name: port-config
-            type: pvc
-            size: 500Mi
-          - name: wireguard
-            type: secret
-            secretName: wireguard-config
-          - name: downloads
-            type: csi
-            driver: smb.csi.k8s.io
-            source: '//u493236-sub1.your-storagebox.de/u493236-sub1/downloads'
-            secretName: smbcreds
-            mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock"
+        enabled: false
 
       jellyfin:
         ingress:
@@ -68,7 +26,7 @@ spec:
         volumes:
           - name: jellyfin-config
             type: pvc
-            size: 500Mi
+            size: 4Gi
           - name: movies
             type: csi
             driver: smb.csi.k8s.io
@@ -92,20 +50,12 @@ spec:
         volumeMounts:
           - name: radarr-config
             mountPath: /config
-          - name: downloads
-            mountPath: /downloads
           - name: movies
             mountPath: /movies
         volumes:
           - name: radarr-config
             type: pvc
             size: 500Mi
-          - name: downloads
-            type: csi
-            driver: smb.csi.k8s.io
-            source: '//u493236-sub1.your-storagebox.de/u493236-sub1/downloads'
-            secretName: smbcreds
-            mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock"
           - name: movies
             type: csi
             driver: smb.csi.k8s.io
@@ -119,20 +69,12 @@ spec:
         volumeMounts:
           - name: sonarr-config
             mountPath: /config
-          - name: downloads
-            mountPath: /downloads
           - name: tv
             mountPath: /tv
         volumes:
           - name: sonarr-config
             type: pvc
             size: 500Mi
-          - name: downloads
-            type: csi
-            driver: smb.csi.k8s.io
-            source: '//u493236-sub1.your-storagebox.de/u493236-sub1/downloads'
-            secretName: smbcreds
-            mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock"
           - name: tv
             type: csi
             driver: smb.csi.k8s.io
