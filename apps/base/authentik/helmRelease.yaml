@@ -1,0 +1,24 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: authentik
+  namespace: default
+spec:
+  targetNamespace: authentik
+  interval: 30s
+  chart:
+    spec:
+      chart: authentik
+      sourceRef:
+        kind: HelmRepository
+        name: authentik
+        namespace: default
+      interval: 30s
+  values:
+    server:
+      ingress:
+        ingressClassName: nginx
+        enabled: true
+        hosts:
+        - authentik.dev.cbxon.co.uk

@@ -3,9 +3,6 @@ kind: Kustomization
 metadata:
   name: apps
 resources:
-  - jellystack-sealedsecret.yaml
-  - ../base/jellystack
-patches:
-  - path: jellystack-values.yaml
-    target:
-      kind: HelmRelease
+  - jellystack
+  - n8n
+  - authentik
