@@ -7,11 +7,22 @@ metadata:
   namespace: bitmagnet
 spec:
   containers:
+  - image: postgres
+    name: bitmagnet-postgres
+    ports:
+      - containerPort: 5432
+    env:
+      - name: POSTGRES_PASSWORD
+        value: postgres
+      - name: POSTGRES_DB
+        value: bitmagnet
+      - name: PGUSER
+        value: postgres
   - image: ghcr.io/bitmagnet-io/bitmagnet:latest
     name: bitmagnet
     env:
       - name: POSTGRES_HOST
-        value: postgres
+        value: 127.0.0.1
       - name: POSTGRES_PASSWORD
         value: postgres
     args:
