@@ -4,7 +4,7 @@ metadata:
   name: ingress-bitmagnet
   namespace: bitmagnet
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /webui/
+    nginx.ingress.kubernetes.io/rewrite-target: /
   labels:
     run: bitmagnet
 spec:
