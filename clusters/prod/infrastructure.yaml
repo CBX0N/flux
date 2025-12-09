@@ -18,11 +18,34 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: metallb-controller
+  namespace: default
+spec:
+  dependsOn:
+    - name: helm-repos
+  interval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-sync
+    namespace: flux-system
+  path: ./infrastructure/controllers/metallb
+  prune: true
+  wait: true
+  postBuild:
+    substitueFrom:
+      - kind: ConfigMap
+        name: metallb-vip-range
+--- 
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: infra-controllers
   namespace: default
 spec:
   dependsOn:
     - name: helm-repos
+    - name: metallb-controller
   interval: 1m
   timeout: 5m
   sourceRef:
