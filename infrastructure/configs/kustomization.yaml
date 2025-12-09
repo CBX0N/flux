@@ -4,13 +4,3 @@ metadata:
   name: infra-configs
 resources:
   - cluster-issuers.yaml
-  - ipaddresspool.yaml
-
-vars:
-  - name: IP_ADDRESS_RANGE
-    objref:
-      kind: ConfigMap
-      name: my-metallb-vip-range
-      apiVersion: v1
-    fieldref:
-      fieldpath: data.ip-range

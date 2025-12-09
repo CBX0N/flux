@@ -1,9 +1,24 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 metadata:
-  name: infra-controllers
+  name: metallb-controller
 resources:
   - metallb.yaml
+vars:
+  - name: IP_ADDRESS_RANGE
+    objref:
+      kind: ConfigMap
+      name: my-metallb-vip-range
+      apiVersion: v1
+    fieldref:
+      fieldpath: data.ip-range
+
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: infra-controllers
+resources:
   - longhorn.yaml
   - csi-driver-smb.yaml
   - sealed-secrets.yaml
