@@ -1,0 +1,9 @@
+# apiVersion: kustomize.config.k8s.io/v1beta1
+# kind: Kustomization
+# metadata:
+#   name: bitmagnet
+# resources:
+#   - ns.yaml
+#   - bitmagnet.yaml
+#   - postgres.yaml
+#   - ingress.yaml

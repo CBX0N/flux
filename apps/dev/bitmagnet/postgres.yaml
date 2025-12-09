@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql
+  namespace: bitmagnet
+  labels:
+    app: postgres
+spec:
+  ports:
+  - port: 5432
+    name: postgres
+  selector:
+    app: postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bitmagnet-db
+  namespace: bitmagnet
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  serviceName: postgresql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:latest
+        ports:
+        - containerPort: 5432
+          name: postgres
+        volumeMounts:
+        - name: pg-data-disk
+          mountPath: /data
+        env:
+          - name: POSTGRES_PASSWORD
+            value: postgres
+          - name: POSTGRES_DB
+            value: bitmagnet
+          - name: PGDATA
+            value: /data/pgdata
+  volumeClaimTemplates:
+  - metadata:
+      name: pg-data-disk
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 40Gi

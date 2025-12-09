@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-bitmagnet
+  namespace: bitmagnet
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  labels:
+    run: bitmagnet
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: bitmagnet.cbxon.co.uk
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: bitmagnet
+            port:
+              number: 3333
+  tls:
+  - hosts:
+    - bitmagnet.cbxon.co.uk
+    secretName: bitmagnet-tls
