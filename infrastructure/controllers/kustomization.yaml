@@ -3,6 +3,7 @@ kind: Kustomization
 metadata:
   name: infra-controllers
 resources:
+  - metallb.yaml
   - longhorn.yaml
   - csi-driver-smb.yaml
   - sealed-secrets.yaml

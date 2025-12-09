@@ -1,0 +1,112 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: bitmagnet
+  name: bitmagnet
+  namespace: bitmagnet
+spec:
+  ports:
+  - name: http-tcp
+    port: 3333
+    protocol: TCP
+    targetPort: http-tcp
+  - name: dht-tcp
+    port: 3334
+    protocol: TCP
+    targetPort: dht-tcp
+  - name: dht-udp
+    port: 3334
+    protocol: UDP
+    targetPort: dht-udp
+  selector:
+    app: bitmagnet
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bitmagnet
+  name: bitmagnet
+  namespace: bitmagnet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bitmagnet
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: bitmagnet
+    spec:
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - 127.0.0.1
+      volumes:
+        - name: wireguard
+          secret: 
+            secretName: wireguard-config
+        - name: dnsmasq-conf
+          configMap:
+            name: dnsmasq-conf
+      initContainers:
+        - name: disable-ipv6
+          image: busybox:latest
+          command:
+            - sh
+            - -c
+            - |
+              echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
+              echo 1 > /proc/sys/net/ipv6/conf/default/disable_ipv6
+          securityContext:
+            privileged: true
+      containers:
+        - image: ghcr.io/bitmagnet-io/bitmagnet:latest
+          name: bitmagnet
+          env:
+            - name: POSTGRES_HOST
+              value: "postgresql.bitmagnet.svc.cluster.local"
+            - name: POSTGRES_PASSWORD
+              value: postgres
+          args:
+            - worker
+            - run
+            - --keys=http_server
+            - --keys=queue_server
+            - --keys=dht_crawler
+          ports:
+          - containerPort: 3333
+            name: http-tcp
+          - containerPort: 3334
+            name: dht-tcp
+          - containerPort: 3334
+            name: dht-udp
+            protocol: UDP
+        # - name: wireguard
+        #   image: wireguard:latest
+        #   volumeMounts:
+        #     - name: wireguard
+        #       mountPath: "/etc/wireguard/wg0.conf"
+        #       subPath: wg0.conf
+        #   securityContext:
+        #     privileged: true
+        #     capabilities:
+        #       add: ["NET_ADMIN"]
+        #   env:
+        #     - name: WG_QUICK_USE_NFTABLES
+        #       value: "0"
+        - name: dnsmasq
+          image: 4km3/dnsmasq:latest
+          args:
+            - "-k"
+            - "--conf-file=/etc/dnsmasq.conf"
+            - "--log-queries"
+            - "--log-facility=-"
+          volumeMounts:
+            - name: dnsmasq-conf
+              mountPath: "/etc/dnsmasq.conf"
+              subPath: dnsmasq.conf

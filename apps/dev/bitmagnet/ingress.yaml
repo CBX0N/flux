@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: bitmagnet.dev.cbxon.co.uk
+  - host: bitmagnet.cbxon.co.uk
     http:
       paths:
       - path: /
@@ -20,4 +20,7 @@ spec:
             name: bitmagnet
             port:
               number: 3333
-
+  tls:
+  - hosts:
+    - bitmagnet.cbxon.co.uk
+    secretName: bitmagnet-tls
