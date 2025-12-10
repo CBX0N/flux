@@ -6,4 +6,4 @@ metadata:
 resources:
   - helmRelease.yaml
   - ipaddresspool.yaml
-  - seal2advertisement.yaml
+  - l2advertisement.yaml
