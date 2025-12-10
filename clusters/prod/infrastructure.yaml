@@ -48,7 +48,7 @@ spec:
     kind: GitRepository
     name: flux-sync
     namespace: flux-system
-  path: ./infrastructure/metallb/config
+  path: ./infrastructure/metallb/configs
   prune: true
   wait: true
   postBuild:
