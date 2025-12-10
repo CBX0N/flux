@@ -29,7 +29,26 @@ spec:
     kind: GitRepository
     name: flux-sync
     namespace: flux-system
-  path: ./infrastructure/controllers/metallb
+  path: ./infrastructure/metallb
+  prune: true
+  wait: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: metallb-config
+  namespace: default
+spec:
+  dependsOn:
+    - name: helm-repos
+    - name: metallb-controller
+  interval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-sync
+    namespace: flux-system
+  path: ./infrastructure/metallb/config
   prune: true
   wait: true
   postBuild:
@@ -46,6 +65,7 @@ spec:
   dependsOn:
     - name: helm-repos
     - name: metallb-controller
+    - name: metallb-config
   interval: 1m
   timeout: 5m
   sourceRef:
