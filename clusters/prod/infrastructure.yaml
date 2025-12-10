@@ -33,7 +33,7 @@ spec:
   prune: true
   wait: true
   postBuild:
-    substitueFrom:
+    substituteFrom:
       - kind: ConfigMap
         name: metallb-vip-range
 --- 
